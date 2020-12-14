@@ -14,7 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $data  = [
+            'name' => 'morshed'
+        ];
+        return response()->json($data);
     }
 
     /**
@@ -35,7 +38,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // $this->validate($request,[
+        //     'name'=>'required'
+        // ]);
+        Category::create([
+            'name' => $request->name
+        ]);
+        return response()->json('success',200);
+
     }
 
     /**
