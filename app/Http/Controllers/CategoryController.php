@@ -14,10 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data  = [
-            'name' => 'morshed'
-        ];
-        return response()->json($data);
+        $category = Category::all();
+        return response()->json($category,200);
     }
 
     /**
@@ -39,13 +37,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
 
-        // $this->validate($request,[
-        //     'name'=>'required'
-        // ]);
-        Category::create([
+        $this->validate($request,[
+            'name'=>'required'
+        ]);
+        $category = Category::create([
             'name' => $request->name
         ]);
-        return response()->json('success',200);
+        return response()->json(['success',$category],200);
 
     }
 
@@ -68,7 +66,11 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        if($category){
+            return response()->json($category,200);
+        }else{
+            return response()->json('failed',200);
+        }
     }
 
     /**
@@ -80,7 +82,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request,[
+            'name' => "required|unique:categories,name, $category->id"
+        ]);
+        $category->update([
+            'name' => $request->name
+        ]);
+
+        return response()->json('success',200);
+
     }
 
     /**
@@ -91,6 +101,7 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json('success',200);
     }
 }

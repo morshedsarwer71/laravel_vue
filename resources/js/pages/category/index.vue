@@ -17,12 +17,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>morshed</td>
+                                <tr v-for="category in categories" :key="category.id">
+                                    <td>{{category.id}}</td>
+                                    <td>{{category.name}}</td>
                                     <td>
-                                        <a href="#" class="btn btn-primary btn-sm">edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm">delete</a>
+                                        <router-link :to="{name: 'edit-category', params:{id:category.id}}" class="btn btn-primary btn-sm">edit</router-link>
+                                        <a @click="DeleteCategory(category.id)" href="#" class="btn btn-danger btn-sm">delete</a>
                                         </td>
                                 </tr>
                             </tbody>
@@ -36,8 +36,30 @@
 
 <script>
     export default {
+        data(){
+            return{
+                categories:[]
+            }
+        },
+        methods:{
+            loadCategories(){
+                axios.get('/api/category').then(response=>{
+                    //console.log(response);
+                    this.categories = response.data;
+                })
+            },
+            DeleteCategory(id){
+                axios.delete(`/api/category/${id}`).then(response=>{
+                    this.$toast.success({
+                            title: 'success',
+                            message: 'updated successfully'
+                        });
+                    this.loadCategories();
+                })
+            }
+        },
         mounted() {
-            console.log('Component mounted.')
+            this.loadCategories()
         }
     }
 </script>

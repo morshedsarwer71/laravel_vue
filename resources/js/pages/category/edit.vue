@@ -4,13 +4,13 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-head">
-                    <h5>Create Category</h5>
+                    <h5>Edit Category</h5>
                     <a href="#">back to categories</a>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 offset-3">
-                            <form @submit.prevent="CreateCategory">
+                            <form @submit.prevent="UpdateCategory">
                                 <div class="form-group">
                                     <label>Name</label>
                                     <input v-model="categoryForm.name" type="text" name="name"
@@ -18,7 +18,7 @@
                                     <has-error :form="categoryForm" field="name"></has-error>
                                 </div>
                                 <div class="from-group">
-                                    <button type="submit" class="btn btn-success">Create Category</button>
+                                    <button type="submit" class="btn btn-success">Update Category</button>
                                 </div>
                             </form>
                         </div>
@@ -42,26 +42,24 @@ export default {
 
     },
     methods:{
-        CreateCategory(){
-            //console.log('form submitted')
-            //let obj = this
-            // let category = {
-            //     name: this.categoryName
-            // };
-            // axios.post('/api/category',category).then(response => {
-            //     console.log(response.data[1]['name'])
-            // });
-
-            this.categoryForm.post('/api/category')
-            .then(({data})=> {
-                this.categoryForm.name= ''
+        UpdateCategory(){
+            let id  = this.$route.params.id
+            this.categoryForm.put(`/api/category/${id}`)
+            .then(()=> {
                 this.$toast.success({
                     title: 'success',
-                    message: 'added successfully'
+                    message: 'updated successfully'
                 });
-
+            })
+        },
+        loadCategory(){
+            let id  = this.$route.params.id
+            axios.get(`/api/category/${id}/edit`).then(response => {
+                this.categoryForm.name = response.data.name
             })
         }
+    }, mounted(){
+        this.loadCategory()
     }
 }
 </script>

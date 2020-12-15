@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// [any?] key used from 404 not found
 Route::get('/{any?}', function () {
     return view('app');
 });
